@@ -7,11 +7,7 @@ function findAuthorById(authors, id) {
 }
 
 function findBookById(books, id) {
-  for (let i = 0; i < books.length; i++) {
-    if (books[i].id === id) {
-        return books[i];
-    }
-  }
+  return books.find(({ id: bookID }) => id == bookID)
 }
 
 function partitionBooksByBorrowedStatus(books) {
@@ -31,12 +27,15 @@ function partitionBooksByBorrowedStatus(books) {
 }
 
 function getBorrowersForBook(book, accounts) {
-  const result = book.borrows.map(borrower => { 
-    const result = accounts.find(account => borrower.id === account.id )
-    result.returned = borrower.returned;
-    return result;
-   })
-   return result.filter((borrower, index)=> result.findIndex(item => item.id === borrower.id) === index);
+  const { borrows: borrowList } = book
+  let borrowers = []
+
+  accounts.forEach(account => {
+      borrowList.forEach(({ id, returned }) => {
+          if (id == account.id) borrowers.push({ ...account, returned })
+      })
+  })
+  return borrowers.slice(0, 10)
 }
 
 module.exports = {
