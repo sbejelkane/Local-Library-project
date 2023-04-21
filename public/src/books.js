@@ -31,7 +31,23 @@ function partitionBooksByBorrowedStatus(books) {
     return booksPartitioned; 
   }
 
+function helper(accounts) {
+    accounts.forEach(account => {
+        borrowList.forEach(({ id, returned }) => {
+            if (id == account.id) borrowers.push({ ...account, returned })
+        })
+    })    
+}  
+
 function getBorrowersForBook(book, accounts) {
+    const { borrows: borrowList } = book
+    //   let borrowers = []
+    let borrowers = helper(accounts)
+    return borrowers.slice(0, 10)
+}
+
+
+/* function getBorrowersForBook(book, accounts) {
   const { borrows: borrowList } = book
   let borrowers = []
 
@@ -42,6 +58,7 @@ function getBorrowersForBook(book, accounts) {
   })
   return borrowers.slice(0, 10)
 }
+*/
 
 module.exports = {
   findAuthorById,
