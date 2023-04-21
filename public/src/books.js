@@ -10,21 +10,26 @@ function findBookById(books, id) {
   return books.find(({ id: bookID }) => id == bookID)
 }
 
+//helper function
+const notReturned = [];
+const returned = [];
+const booksPartitioned = [notReturned, returned];
+
+function pushToAnArray(item) {
+	if (item === false) {
+		notReturned.push(item);
+	} else {
+		returned.push(item);
+	};
+}
+
 function partitionBooksByBorrowedStatus(books) {
-  const notReturned = [];
-    const returned = [];
-    
     for (let i = 0; i < books.length; i++) {
         let book = books[i]
-        if (book.borrows[0].returned === false) {
-            notReturned.push(book);
-        } else {
-            returned.push(book);
-        }
-    }
-    const booksPartitioned = [notReturned, returned];
-    return booksPartitioned;
-}
+        pushToAnArray(book);
+      }
+    return booksPartitioned; 
+  }
 
 function getBorrowersForBook(book, accounts) {
   const { borrows: borrowList } = book
