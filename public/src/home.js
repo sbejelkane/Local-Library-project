@@ -55,22 +55,38 @@ function getMostPopularBooks(books) {
   return nameCount.slice(0, 5);
 }
 
-function getMostPopularAuthors(books, authors) {
-  const result= [];
-    authors.forEach(author => {
-      const returnAuthor = { 
-        name: `${author.name.first} ${author.name.last}`, 
-        count: 0
-      }
-      books.forEach(book => {
-        if (book.authorId === author.id) {
-          returnAuthor.count += book.borrows.length;
-        }
-      })
-      result.push(returnAuthor);
-    })
-    return result.sort((a,b) => b.count - a.count).slice(0, 5);
+
+// helper function
+function findAuthorById(authors, id) {
+  let result = authors.find((author) => {
+		return author.id === id;
+	});
+  return result;
 }
+
+function getMostPopularAuthors(books, authors) {
+    let authorList = books.reduce((list, { authorId, borrows }) => {
+      const authorIndex = list.findIndex(({ name }) => name == authorId);
+      if (authorIndex > -1) {
+          list[authorIndex].count += borrows.length;
+      } else {
+          list.push({ id: authorId, count: borrows.length })
+      }
+      return list
+  }, [])
+  
+  authorList = authorList.map(({ id, count }) => {
+      const { name } = findAuthorById(authors, id);
+      const authorName = `${name.first} ${name.last}`
+      return { name: authorName, count }
+  })
+  authorList.sort((authorA, authorB) => {
+    return authorB.count - authorA.count;
+  })
+
+  return authorList.slice(0, 5);  
+}
+
 
 
 module.exports = {
