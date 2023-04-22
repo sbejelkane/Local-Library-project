@@ -1,6 +1,8 @@
 function findAccountById(accounts, id) {
   let result = accounts.find((account) => {
     return account.id === id;
+  })
+  return result;
 }
 
 function sortAccountsByLastName(accounts) {
@@ -37,4 +39,4 @@ module.exports = {
   sortAccountsByLastName,
   getTotalNumberOfBorrows,
   getBooksPossessedByAccount,
-};
+}
